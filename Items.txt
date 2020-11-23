@@ -6,7 +6,7 @@ E -> .T
 T -> .T*F
 T -> .F
 F -> .(E)
-F -> .id
+F -> .i
 
 I1:
 E' -> E.
@@ -22,26 +22,26 @@ T -> F.
 I4:
 F -> (.E)
 F -> .(E)
-F -> .id
+F -> .i
 E -> .E+T
 E -> .T
 T -> .T*F
 T -> .F
 
 I5:
-F -> id.
+F -> i.
 
 I6:
 E -> E+.T
 T -> .T*F
 T -> .F
 F -> .(E)
-F -> .id
+F -> .i
 
 I7:
 T -> T*.F
 F -> .(E)
-F -> .id
+F -> .i
 
 I8:
 F -> (E.)

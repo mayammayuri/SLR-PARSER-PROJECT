@@ -1,36 +1,36 @@
 digraph {
-	I0 [label="E' -> .E\nE -> .E+T\nE -> .T\nT -> .T*F\nT -> .F\nF -> .(E)\nF -> .id\n"]
+	I0 [label="E' -> .E\nE -> .E+T\nE -> .T\nT -> .T*F\nT -> .F\nF -> .(E)\nF -> .i\n"]
 	I1 [label="E' -> E.\nE -> E.+T\n"]
 	I2 [label="E -> T.\nT -> T.*F\n"]
 	I3 [label="T -> F.\n"]
-	I4 [label="F -> (.E)\nF -> .(E)\nF -> .id\nE -> .E+T\nE -> .T\nT -> .T*F\nT -> .F\n"]
-	I5 [label="F -> id.\n"]
-	I6 [label="E -> E+.T\nT -> .T*F\nT -> .F\nF -> .(E)\nF -> .id\n"]
-	I7 [label="T -> T*.F\nF -> .(E)\nF -> .id\n"]
+	I4 [label="F -> (.E)\nF -> .(E)\nF -> .i\nE -> .E+T\nE -> .T\nT -> .T*F\nT -> .F\n"]
+	I5 [label="F -> i.\n"]
+	I6 [label="E -> E+.T\nT -> .T*F\nT -> .F\nF -> .(E)\nF -> .i\n"]
+	I7 [label="T -> T*.F\nF -> .(E)\nF -> .i\n"]
 	I8 [label="F -> (E.)\nE -> E.+T\n"]
 	I9 [label="E -> E+T.\nT -> T.*F\n"]
 	I10 [label="T -> T*F.\n"]
 	I11 [label="F -> (E).\n"]
-	I0 -> I1
-	I0 -> I2
-	I0 -> I3
-	I0 -> I4
-	I0 -> I5
-	I1 -> I6
-	I2 -> I7
-	I4 -> I8
-	I4 -> I2
-	I4 -> I3
-	I4 -> I4
-	I4 -> I5
-	I6 -> I9
-	I6 -> I3
-	I6 -> I4
-	I6 -> I5
-	I7 -> I10
-	I7 -> I4
-	I7 -> I5
-	I8 -> I6
-	I8 -> I11
-	I9 -> I7
+	I0 -> I1 [label=E]
+	I0 -> I2 [label=T]
+	I0 -> I3 [label=F]
+	I0 -> I4 [label="("]
+	I0 -> I5 [label=i]
+	I1 -> I6 [label="+"]
+	I2 -> I7 [label="*"]
+	I4 -> I8 [label=E]
+	I4 -> I2 [label=T]
+	I4 -> I3 [label=F]
+	I4 -> I4 [label="("]
+	I4 -> I5 [label=i]
+	I6 -> I9 [label=T]
+	I6 -> I3 [label=F]
+	I6 -> I4 [label="("]
+	I6 -> I5 [label=i]
+	I7 -> I10 [label=F]
+	I7 -> I4 [label="("]
+	I7 -> I5 [label=i]
+	I8 -> I6 [label="+"]
+	I8 -> I11 [label=")"]
+	I9 -> I7 [label="*"]
 }
