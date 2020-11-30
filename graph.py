@@ -39,7 +39,8 @@ for x in edg:
         i2 = len(goto)
     i1 = goto.index(e1)
     for y in range(i1+1, i2-1):
-        n, m = goto[y].split(",")
+        print(goto[y])
+        n, m = goto[y].split(" -> ")
         if m == ed:
             edgelabel = n
     graph.edge(edge1, edge2, label=edgelabel)

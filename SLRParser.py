@@ -309,7 +309,7 @@ def print_info():
                         break
 
                 r.write(str(X))
-                r.write(',')
+                r.write(' -> ')
                 r.write(str(ctr))
                 e.write('I'+str(i))
                 e.write('|')
