@@ -1,37 +1,29 @@
-9
+7
 I0:
 S' -> .S
-S -> .(L)
-S -> .i
+S -> .AA
+A -> .aA
+A -> .b
 
 I1:
 S' -> S.
 
 I2:
-S -> (.L)
-S -> .(L)
-S -> .i
-L -> .L,S
-L -> .S
+S -> A.A
+A -> .aA
+A -> .b
 
 I3:
-S -> i.
+A -> a.A
+A -> .aA
+A -> .b
 
 I4:
-L -> S.
+A -> b.
 
 I5:
-S -> (L.)
-L -> L.,S
+S -> AA.
 
 I6:
-S -> (L).
-
-I7:
-L -> L,.S
-S -> .(L)
-S -> .i
-
-I8:
-L -> L,S.
+A -> aA.
 

@@ -1,4 +1,31 @@
-grammars = open("grammar.txt")
+from tkinter import Tk
+from tkinter import *
+
+from graphviz.dot import Graph
+from graph import make_graph
+import tkinter as tk
+import tkinter
+from tabulate import tabulate
+from graphviz import dot
+from PIL import ImageTk, Image
+from graphviz import Digraph
+import sys
+import os
+import shlex
+import copy
+from prettytable import PrettyTable
+import numpy as np
+
+master = Tk()
+
+master.title('SLR Parser')
+
+canvas = Canvas(master, width=master.winfo_screenwidth(),
+                height=master.winfo_screenheight())
+
+
+grammars = open("F:\EBOOKS\Third year\Compiler design\lab\project\grammar.txt")
+#grammars = open("grammar.txt")
 G = {}
 C = {}
 start = ""
@@ -6,6 +33,12 @@ terminals = []
 nonterminals = []
 symbols = []
 error = 0
+master = Tk()
+
+master.title('SLR Parser')
+
+canvas = Canvas(master, width=master.winfo_screenwidth(),
+                height=master.winfo_screenheight())
 
 
 def parse_grammar():
@@ -134,7 +167,7 @@ def items():
         item_len = len(C) + sum(len(v) for v in C.items())
         for I in list(C):
             for X in symbols:
-                #print(C[I], ',', X,'-----',GOTO(C[I],X))
+                # print(C[I], ',', X,'-----',GOTO(C[I],X))
                 if GOTO(C[I], X) and GOTO(C[I], X) not in C.values():
                     C['I' + str(i)] = GOTO(C[I], X)
                     i += 1
@@ -144,6 +177,8 @@ def items():
 
 def ACTION(i, a):
     global error
+    global terminals
+
     for heads in C['I' + str(i)]:
         for prods in C['I' + str(i)][heads]:
             for j in range(len(prods) - 1):
@@ -151,6 +186,7 @@ def ACTION(i, a):
                     for k in range(len(C)):
                         if GOTO(C['I' + str(i)], a) == C['I' + str(k)]:
                             if a in terminals:
+
                                 if "r" in parse_table[i][terminals.index(a)]:
                                     if error != 1:
                                         print("ERROR: Shift-Reduce Conflict at State " + str(i) + ", Symbol \'" + str(
@@ -180,33 +216,34 @@ def ACTION(i, a):
                                         index = len(terminals)
                                     else:
                                         index = terminals.index(terms)
+                                    
                                     if "s" in parse_table[i][index]:
                                         if error != 1:
-                                            print(
-                                                "ERROR: Shift-Reduce Conflict at State " + str(i) + ", Symbol \'" + str(
-                                                    terms) + "\'")
-                                        error = 1
+                                            print("ERROR: Shift-Reduce Conflict at State " + str(i) + ", Symbol \'" + str(terms) + "\'")
+                                        
                                         if "r" + str(k) not in parse_table[i][index]:
                                             parse_table[i][index] = parse_table[i][index] + \
                                                 "/r" + str(k)
                                         return parse_table[i][index]
+                                        
                                     elif parse_table[i][index] and parse_table[i][index] != "r" + str(k):
                                         if error != 1:
-                                            print("ERROR: Reduce-Reduce Conflict at State " + str(
-                                                i) + ", Symbol \'" + str(terms) + "\'")
-                                        error = 1
+                                            print("ERROR: Reduce-Reduce Conflict at State " + str(i) + ", Symbol \'" + str(terms) + "\'")
+                                        
                                         if "r" + str(k) not in parse_table[i][index]:
                                             parse_table[i][index] = parse_table[i][index] + \
                                                 "/r" + str(k)
                                         return parse_table[i][index]
+                                        
                                     else:
                                         parse_table[i][index] = "r" + str(k)
                                 return "r" + str(k)
+                                
                             k += 1
     if start in C['I' + str(i)] and G[start][0] + ['.'] in C['I' + str(i)][start]:
         parse_table[i][len(terminals)] = "acc"
         return "acc"
-    return ""
+    return "0"
 
 
 def print_info():
@@ -229,8 +266,8 @@ def print_info():
     i = 0
     print('', end=' ')
     for head in G.keys():
-        print("{:>{width}} -> ".format(head,
-                                       width=len(max(G.keys(), key=len))), end='')
+        print("{:>{width}} ->".format(head,
+                                      width=len(max(G.keys(), key=len))), end='')
         num_prods = 0
         for prods in G[head]:
             if num_prods > 0:
@@ -253,9 +290,10 @@ def print_info():
 
             output_file.write('\n')
             i += 1
-    print("\nTERMINALS   :", *terminals, sep='  ')
-    print("NONTERMINALS:", *nonterminals, sep='  ')
-    print("SYMBOLS     :", *symbols, sep='  ')
+    terminals.append("$")
+    print("\nTERMINALS   :", terminals)
+    print("NONTERMINALS:", nonterminals)
+    print("SYMBOLS     :", symbols)
     print("\nFIRST:")
     print('', end=' ')
     for head in G:
@@ -275,7 +313,7 @@ def print_info():
     for head in G:
         print("{:>{width}} =".format(
             head, width=len(max(G.keys(), key=len))), end='')
-        print(" { ", end='')
+        print("{ ", end='')
         num_terms = 0
         for terms in FOLLOW(head):
             if num_terms > 0:
@@ -283,9 +321,9 @@ def print_info():
             print(terms, end='')
             num_terms += 1
         print(" }")
-    f = open("Items.txt", "w+")
-    r = open("Gotofile.txt", "w+")
-    e = open("Edges.txt", "w+")
+    f = open("F:\EBOOKS\Third year\Compiler design\lab\project\Items.txt", "w+")
+    r = open("F:\EBOOKS\Third year\Compiler design\lab\project\Gotofile.txt", "w+")
+    e = open("F:\EBOOKS\Third year\Compiler design\lab\project\Edges.txt", "w+")
     f.write(str(len(C)) + "\n")
     for i in range(len(C)):
         f.write('I' + str(i) + ':')
@@ -293,7 +331,7 @@ def print_info():
         for keys in C['I' + str(i)]:
             for prods in C['I' + str(i)][keys]:
                 f.write("{:>{width}} -> ".format(keys,
-                                                 width=len(max(G.keys(), key=len))-1))
+                                                 width=len(max(G.keys(), key=len)) - 1))
                 for prod in prods:
                     f.write(prod)
                 f.write('\n')
@@ -302,18 +340,18 @@ def print_info():
 
         for X in symbols:
             ctr = -1
-            if GOTO(C['I'+str(i)], X) != {}:
+            if GOTO(C['I' + str(i)], X) != {}:
                 for si in range(len(C)):
-                    if GOTO(C['I' + str(i)], X) == C['I'+str(si)]:
+                    if GOTO(C['I' + str(i)], X) == C['I' + str(si)]:
                         ctr = si
                         break
 
                 r.write(str(X))
                 r.write(' -> ')
                 r.write(str(ctr))
-                e.write('I'+str(i))
+                e.write('I' + str(i))
                 e.write('|')
-                e.write('I'+str(ctr))
+                e.write('I' + str(si))
                 e.write('\n')
                 r.write('\n')
 
@@ -324,94 +362,131 @@ def print_info():
     for i in range(len(parse_table)):  # len gives number of states
         for j in symbols:
             ACTION(i, j)
-    print("\n\nPARSING TABLE:")
-    print("+" + "--------+" * (len(terminals) + len(nonterminals) + 1))
-    print("|{:^8}|".format('STATE'), end=' ')
-    for terms in terminals:
-        print("{:^7}|".format(terms), end=' ')
-    print("{:^7}|".format("$"), end=' ')
-    for nonterms in nonterminals:
-        if nonterms == start:
-            continue
-        print("{:^7}|".format(nonterms), end=' ')
-    print("\n+" + "--------+" * (len(terminals) + len(nonterminals) + 1))
-    for i in range(len(parse_table)):
-        print("|{:^8}|".format(i), end=' ')
-        for j in range(len(parse_table[i]) - 1):
-            print("{:^7}|".format(parse_table[i][j]), end=' ')
-        print()
-    print("+" + "--------+" * (len(terminals) + len(nonterminals) + 1))
+    print_table()
+    process_input()
+    
 
+
+class TabulateLabel(tk.Label):
+    def __init__(self, data, header, **kwargs):
+        super().__init__(font=('Consolas', 10), justify=tk.LEFT, anchor='nw', **kwargs)
+        text = tabulate(data, headers=header, tablefmt='psql', showindex=False)
+        self.configure(text=text)
+
+    # display.pack()
+
+
+def print_table():
+
+    rows, cols = (len(C.keys()) + 1, len(terminals) + len(nonterminals[1:]))
+    parseing_table = ['States']
+    nptable = []
+    print("PARSING TABLE:")
+    for ele in terminals:
+        parseing_table.append(ele)
+    for j in nonterminals[1:]:
+        parseing_table.append(j)
+    header = parseing_table
+    for i in range(len(parse_table)):
+        for j in range(len(parse_table[i])):
+            if parse_table[i][j] == '':
+                parse_table[i][j] = '0'
+    position = 0
+    add = []
+    for i in range(len(parse_table)):
+        for j in range(len(parse_table[i])):
+            if parse_table[i][j] == '0':
+                if j not in add:
+                    add.append(j)
+            elif j in add:
+                add.remove(j)
+    position = add[0]
+    for i in range(len(parse_table)):
+        parse_table[i][position] = 'pp'
+        parse_table[i].insert(0, 'I'+str(i))
+    for i in range(len(parse_table)):
+        parse_table[i].remove('pp')
+    print(len(header), len(parse_table[0]))
+    print(tabulate(parse_table, headers=header, tablefmt="psql"))
 
 def process_input():
-    get_input = input("\nEnter Input: ")
-    to_parse = " ".join((get_input + " $").split()).split(" ")
-    pointer = 0
-    stack = ['0']
+    input_string = ""
+    inputtt = open('F:\EBOOKS\Third year\Compiler design\lab\project\string.txt')
 
-    print("\n+--------+----------------------------+----------------------------+----------------------------+")
-    print("|{:^8}|{:^28}|{:^28}|{:^28}|".format(
-        "STEP", "STACK", "INPUT", "ACTION"))
-    print("+--------+----------------------------+----------------------------+----------------------------+")
+    for i in inputtt:
+        input_string = input_string.join(i)
+    get_input = input_string
+    list1 = []
+    list1[:0] = get_input
+    list1.append("$")
+    to_parse = list1
+    pointer = 0
+    stack = []
+    stack.append("0")
+    string_table = []
+    header = ["STEP", "STACK", "INPUT", "ACTION"]
 
     step = 1
+    for ele in to_parse:
+        top = int(stack[-1])
+        get_action = ACTION(top, ele)
     while True:
         curr_symbol = to_parse[pointer]
         top_stack = int(stack[-1])
         stack_content = ""
         input_content = ""
-
-        print("|{:^8}|".format(step), )
+        string_table.append(step)
         for i in stack:
             stack_content += i
-        print("{:27}|".format(stack_content), )
+        string_table.append(stack_content)
         i = pointer
         while i < len(to_parse):
             input_content += to_parse[i]
             i += 1
-        print("{:>26} | ".format(input_content), )
-
+        string_table.append(input_content)
         step += 1
         get_action = ACTION(top_stack, curr_symbol)
         if "/" in get_action:
-            print("{:^26}|".format(get_action + ". So conflict"))
+            string_table.append(get_action + ". So conflict")
             break
         if "s" in get_action:
-            print("{:^26}|".format(get_action))
+            string_table.append(get_action)
             stack.append(curr_symbol)
             stack.append(get_action[1:])
             pointer += 1
         elif "r" in get_action:
-            print("{:^26}|".format(get_action))
+            string_table.append(get_action)
             i = 0
             for head in G.keys():
                 for prods in G[head]:
                     if i == int(get_action[1:]):
                         for j in range(2 * len(prods)):
                             stack.pop()
-                        state = stack[-1]
+                        state = stack[-1]   
                         stack.append(head)
                         stack.append(parse_table[int(state)][len(
                             terminals) + nonterminals.index(head)])
                     i += 1
         elif get_action == "acc":
-            print("{:^26}|".format("ACCEPTED"))
+            string_table.append("ACCEPTED")
             break
         else:
+            string_table.append("blank")
             print("ERROR: Unrecognized symbol", curr_symbol, "|")
             break
-    print("+--------+----------------------------+----------------------------+----------------------------+")
+    temp = int(len(string_table)/4)
+    result = np.reshape(string_table, (temp, 4))
+    print(tabulate(result, header, tablefmt="orgtbl"))
 
 
-def main():
-    parse_grammar()
-    items()
-    global parse_table
-    parse_table = [["" for c in range(
-        len(terminals) + len(nonterminals) + 1)] for r in range(len(C))]
-    print_info()
-    process_input()
+parse_grammar()
+items()
+
+global parse_table
+parse_table = [["" for c in range(
+    len(terminals) + len(nonterminals) + 1)] for r in range(len(C))]
+print_info()
+make_graph()
 
 
-if __name__ == '__main__':
-    main()
+# process_input()h
